@@ -3,5 +3,3 @@ make soup
 make more pizza
 read new book
 clean the cup
-Add new todo
-more todo added
