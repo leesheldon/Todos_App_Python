@@ -1,4 +1,7 @@
 meet friends
 make soup
-make pizza
-Read books
+make more pizza
+read new book
+clean the cup
+Add new todo
+more todo added
