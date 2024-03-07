@@ -1,19 +1,40 @@
 import functions
 import PySimpleGUI as Sg
 import time
+import os
+import sys
 
+
+if not os.path.exists("todos.txt"):
+    with open("todos.txt", "w") as file:
+        pass
+
+
+def get_image_path(filename):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, filename)
+    else:
+        return "images/" + filename
+
+
+"""
+Use this below command in Terminal to build the exe file:
+ 
+pyinstaller --add-data "images;." --onefile --windowed --clean gui.py
+
+"""
 # Sg.theme("LightBrown3")
 Sg.theme("DarkBlue8")
 
 clock_label = Sg.Text("", key="clock")
 label = Sg.Text("Type in a to-do")
 input_box = Sg.InputText(tooltip="Enter to-do", key="todo")
-add_button = Sg.Button(size=6, image_source="images/add.png",
+add_button = Sg.Button(size=6, image_source=get_image_path("add.png"),
                        key="Add", tooltip="Add Todo")
 list_box = Sg.Listbox(values=functions.get_todos(), key='todos',
                       enable_events=True, size=(45, 10))
 edit_button = Sg.Button("Edit", size=10)
-complete_button = Sg.Button(size=6, image_source="images/complete.png",
+complete_button = Sg.Button(size=6, image_source=get_image_path("complete.png"),
                             key="Complete", tooltip="Complete Todo")
 exit_button = Sg.Button("Exit")
 
