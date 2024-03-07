@@ -2,23 +2,26 @@ import functions
 import PySimpleGUI as Sg
 import time
 
-Sg.theme("LightBrown3")
+# Sg.theme("LightBrown3")
+Sg.theme("DarkBlue8")
 
 clock_label = Sg.Text("", key="clock")
 label = Sg.Text("Type in a to-do")
 input_box = Sg.InputText(tooltip="Enter to-do", key="todo")
-add_button = Sg.Button("Add")
+add_button = Sg.Button(size=6, image_source="images/add.png",
+                       key="Add", tooltip="Add Todo")
 list_box = Sg.Listbox(values=functions.get_todos(), key='todos',
                       enable_events=True, size=(45, 10))
-edit_button = Sg.Button("Edit")
-complete_button = Sg.Button("Complete")
+edit_button = Sg.Button("Edit", size=10)
+complete_button = Sg.Button(size=6, image_source="images/complete.png",
+                            key="Complete", tooltip="Complete Todo")
 exit_button = Sg.Button("Exit")
 
 window = Sg.Window('My To-Do App',
                    layout=[[clock_label],
                            [label],
-                           [input_box, add_button],
-                           [list_box, edit_button, complete_button],
+                           [input_box, add_button, complete_button],
+                           [list_box, edit_button],
                            [exit_button]],
                    font=('Helvetica', 16))
 
@@ -29,31 +32,40 @@ while True:
     match event:
         case "Add":
             todos = functions.get_todos()
-            new_todo = values['todo'] + "\n"
-            todos.append(new_todo)
-            functions.write_todos(todos)
+            if values['todo'] != "":
+                new_todo = values['todo'] + "\n"
+                todos.append(new_todo)
+                functions.write_todos(todos)
 
-            # Update added item in list box
-            window['todos'].update(values=todos)
-            # Update input box to empty
-            window['todo'].update(value='')
+                # Update added item in list box
+                window['todos'].update(values=todos)
+                # Update input box to empty
+                window['todo'].update(value='')
+            else:
+                Sg.popup("Please input a to-do to add!", title="Warning",
+                         font=('Helvetica', 16))
 
         case "Edit":
             try:
                 todo_to_edit = values['todos'][0]
-                new_todo = values['todo']
+                if values['todo'] != "":
+                    new_todo = values['todo']
 
-                todos = functions.get_todos()
-                index = todos.index(todo_to_edit)
-                todos[index] = new_todo
-                functions.write_todos(todos)
+                    todos = functions.get_todos()
+                    index = todos.index(todo_to_edit)
+                    todos[index] = new_todo
+                    functions.write_todos(todos)
 
-                # Update edited item in list box
-                window['todos'].update(values=todos)
-                # Update input box to empty
-                window['todo'].update(value='')
+                    # Update edited item in list box
+                    window['todos'].update(values=todos)
+                    # Update input box to empty
+                    window['todo'].update(value='')
+                else:
+                    Sg.popup("The new to-do cannot be empty!", title="Warning",
+                             font=('Helvetica', 16))
+
             except IndexError:
-                Sg.popup("Please select an to-do item first!",
+                Sg.popup("Please select a to-do item first!", title="Warning",
                          font=('Helvetica', 16))
 
         case "Complete":
@@ -69,7 +81,7 @@ while True:
                 # Update input box to empty
                 window['todo'].update(value='')
             except IndexError:
-                Sg.popup("Please select an to-do item first!",
+                Sg.popup("Please select a to-do item first!", title="Warning",
                          font=('Helvetica', 16))
 
         case "Exit":
